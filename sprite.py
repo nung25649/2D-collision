@@ -26,17 +26,19 @@ class Ball(pygame.sprite.Sprite):
 pygame.init()
 fps = pygame.time.Clock()
 window = pygame.display.set_mode((500, 500))
+running = True
 allball = []
 for i in range(0, 30):
     allball.append(Ball(i * 17, i * 10, random.choice([-1,1]),
                   random.choice([-1,1]), random.randrange(10,20)))
-while True:
+
+while running:
     window.fill(pygame.Color(255,255, 255))
     for ball in allball:
         ball.update()
-        
         window.blit(ball.image, ball.rect)
-    #window.blit(ball.image, ball.rect)
-    #window.blit(ball2.image, ball2.rect)
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN: 
+            running = False
     pygame.display.update()
     fps.tick(30)
