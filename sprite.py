@@ -22,21 +22,32 @@ class Ball(pygame.sprite.Sprite):
             self.ydir = self.ydir * -1
             self.speed *= 0.95
         self.rect.center = (self.x, self.y)
+    def collide(self, other):
+        if (abs(self.x - other.x) < 20 and abs(self.y - other.y) < 20):
+            self.speed, other.speed = other.speed, self.speed
+            if (self.xdir != other.xdir):
+                self.xdir *= -1
+                other.xdir *= -1
+            if (self.ydir != other.ydir):
+                self.ydir *= -1
+                other.ydir *= -1
         
 pygame.init()
 fps = pygame.time.Clock()
 window = pygame.display.set_mode((500, 500))
 running = True
 allball = []
-for i in range(0, 30):
+for i in range(0, 3):
     allball.append(Ball(i * 17, i * 10, random.choice([-1,1]),
                   random.choice([-1,1]), random.randrange(10,20)))
 
 while running:
     window.fill(pygame.Color(255,255, 255))
-    for ball in allball:
-        ball.update()
-        window.blit(ball.image, ball.rect)
+    for i in range(0, len(allball)):
+        allball[i].update()
+        for j in range(i, len(allball)):
+            allball[i].collide(allball[j])
+        window.blit(allball[i].image, allball[i].rect)
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN: 
             running = False
